@@ -18,7 +18,7 @@ st.subheader("👥 Customer Session")
 
 col1, col2 = st.columns([2, 1])
 with col1:
-customer_name = st.text_input("Customer name", placeholder="Enter customer name (e.g. Adit)")
+    customer_name = st.text_input("Customer name", placeholder="Enter customer name (e.g. Adit)")
 
 with col2:
 if st.button("➕ Add / Switch"):
