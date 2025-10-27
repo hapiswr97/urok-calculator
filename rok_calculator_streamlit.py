@@ -3,7 +3,7 @@ import json
 
 st.set_page_config(page_title="ROK Resource Tracker", page_icon="💎", layout="centered")
 
-st.title("💎 Rise of Kingdoms Resource Tracker v2.2")
+st.title("💎 Rise of Kingdoms Resource Tracker v1.0")
 
 # --- Initialize session state ---
 if "customers" not in st.session_state:
@@ -48,12 +48,8 @@ with col3:
             st.warning("No customer selected.")
         else:
             st.session_state.current_customer = selected_customer
+            st.session_state.form_key = f"form_{selected_customer}"  # unique form key per customer
             st.success(f"✅ Active customer: {selected_customer}")
-
-            # 🧹 Reset input fields when switching customers
-            for key in ["gems_10", "gems_100", "inventory", "honor", "crystal"]:
-                if key in st.session_state:
-                    del st.session_state[key]
 
 # --- Stop if no active customer ---
 if not st.session_state.current_customer:
@@ -61,18 +57,20 @@ if not st.session_state.current_customer:
     st.stop()
 
 customer = st.session_state.customers[st.session_state.current_customer]
+form_key = st.session_state.get("form_key", "form_default")
 
 st.markdown(f"### Active Customer: **{st.session_state.current_customer}**")
 
 # --- Input Section ---
 st.subheader("📥 Input Current State")
 
-with st.form("input_form"):
-    gems_10 = st.number_input("10-Gems (from barbarians)", min_value=0, step=1, key="gems_10")
-    gems_100 = st.number_input("100-Gems (from barbarians)", min_value=0, step=1, key="gems_100")
-    inventory = st.number_input("Inventory Gems", min_value=0, step=1, key="inventory")
-    honor = st.number_input("Honor Points", min_value=0, step=1, key="honor")
-    crystal = st.number_input("Crystals", min_value=0, step=1, key="crystal")
+# make widget keys unique per customer
+with st.form(form_key):
+    gems_10 = st.number_input("10-Gems (from barbarians)", min_value=0, step=1, key=f"gems_10_{form_key}")
+    gems_100 = st.number_input("100-Gems (from barbarians)", min_value=0, step=1, key=f"gems_100_{form_key}")
+    inventory = st.number_input("Inventory Gems", min_value=0, step=1, key=f"inventory_{form_key}")
+    honor = st.number_input("Honor Points", min_value=0, step=1, key=f"honor_{form_key}")
+    crystal = st.number_input("Crystals", min_value=0, step=1, key=f"crystal_{form_key}")
 
     col1, col2 = st.columns(2)
     with col1:
@@ -111,9 +109,9 @@ after_keys = [k for k in customer["saved_states"] if k.startswith("After")]
 
 col1, col2 = st.columns(2)
 with col1:
-    before_choice = st.selectbox("Before State", options=before_keys)
+    before_choice = st.selectbox("Before State", options=before_keys, key=f"before_{form_key}")
 with col2:
-    after_choice = st.selectbox("After State", options=after_keys)
+    after_choice = st.selectbox("After State", options=after_keys, key=f"after_{form_key}")
 
 # --- Calculation ---
 if st.button("⚙️ Calculate"):
