@@ -8,9 +8,9 @@ st.title("💎 Rise of Kingdoms Resource Tracker v2")
 # --- Initialize session state ---
 
 if "customers" not in st.session_state:
-st.session_state.customers = {}
+    st.session_state.customers = {}
 if "current_customer" not in st.session_state:
-st.session_state.current_customer = None
+    st.session_state.current_customer = None
 
 # --- Customer selection ---
 
