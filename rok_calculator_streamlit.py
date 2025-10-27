@@ -14,23 +14,33 @@ if "current_customer" not in st.session_state:
 # --- Customer selection ---
 st.subheader("👥 Customer Session")
 
+# initialize input state
+if "customer_name_input" not in st.session_state:
+    st.session_state.customer_name_input = ""
+
 col1, col2 = st.columns([2, 1])
 with col1:
-    customer_name = st.text_input("Customer name", placeholder="Enter customer name (e.g. Adit)")
+    st.session_state.customer_name_input = st.text_input(
+        "Customer name",
+        value=st.session_state.customer_name_input,
+        placeholder="Enter customer name (e.g. Adit)"
+    )
 
 with col2:
     if st.button("➕ Add / Switch"):
-        if not customer_name.strip():
+        name = st.session_state.customer_name_input.strip()
+        if not name:
             st.warning("Please enter a valid customer name.")
         else:
-            if customer_name not in st.session_state.customers:
-                st.session_state.customers[customer_name] = {
+            if name not in st.session_state.customers:
+                st.session_state.customers[name] = {
                     "saved_states": {},
                     "before_selected": None,
                     "after_selected": None,
                 }
-            st.session_state.current_customer = customer_name
-            st.success(f"✅ Active customer: {customer_name}")
+            st.session_state.current_customer = name
+            st.success(f"✅ Active customer: {name}")
+
 
 if not st.session_state.current_customer:
     st.info("Select or create a customer to begin.")
