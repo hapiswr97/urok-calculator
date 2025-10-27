@@ -3,7 +3,7 @@ import json
 
 st.set_page_config(page_title="ROK Resource Tracker", page_icon="💎", layout="centered")
 
-st.title("💎 Rise of Kingdoms Resource Tracker v2.1")
+st.title("💎 Rise of Kingdoms Resource Tracker v2.2")
 
 # --- Initialize session state ---
 if "customers" not in st.session_state:
@@ -49,19 +49,13 @@ with col3:
         else:
             st.session_state.current_customer = selected_customer
             st.success(f"✅ Active customer: {selected_customer}")
-            if st.button("🔁 Switch Customer"):
-    if not selected_customer:
-        st.warning("No customer selected.")
-    else:
-        st.session_state.current_customer = selected_customer
-        st.success(f"✅ Active customer: {selected_customer}")
 
-        # 🧹 Reset input fields when switching customers
-        for key in ["gems_10", "gems_100", "inventory", "honor", "crystal"]:
-            if key in st.session_state:
-                del st.session_state[key]
+            # 🧹 Reset input fields when switching customers
+            for key in ["gems_10", "gems_100", "inventory", "honor", "crystal"]:
+                if key in st.session_state:
+                    del st.session_state[key]
 
-
+# --- Stop if no active customer ---
 if not st.session_state.current_customer:
     st.info("Select or create a customer to begin.")
     st.stop()
@@ -74,11 +68,11 @@ st.markdown(f"### Active Customer: **{st.session_state.current_customer}**")
 st.subheader("📥 Input Current State")
 
 with st.form("input_form"):
-    gems_10 = st.number_input("10-Gems (from barbarians)", min_value=0, step=1)
-    gems_100 = st.number_input("100-Gems (from barbarians)", min_value=0, step=1)
-    inventory = st.number_input("Inventory Gems", min_value=0, step=1)
-    honor = st.number_input("Honor Points", min_value=0, step=1)
-    crystal = st.number_input("Crystals", min_value=0, step=1)
+    gems_10 = st.number_input("10-Gems (from barbarians)", min_value=0, step=1, key="gems_10")
+    gems_100 = st.number_input("100-Gems (from barbarians)", min_value=0, step=1, key="gems_100")
+    inventory = st.number_input("Inventory Gems", min_value=0, step=1, key="inventory")
+    honor = st.number_input("Honor Points", min_value=0, step=1, key="honor")
+    crystal = st.number_input("Crystals", min_value=0, step=1, key="crystal")
 
     col1, col2 = st.columns(2)
     with col1:
