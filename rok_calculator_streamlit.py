@@ -49,6 +49,18 @@ with col3:
         else:
             st.session_state.current_customer = selected_customer
             st.success(f"✅ Active customer: {selected_customer}")
+            if st.button("🔁 Switch Customer"):
+    if not selected_customer:
+        st.warning("No customer selected.")
+    else:
+        st.session_state.current_customer = selected_customer
+        st.success(f"✅ Active customer: {selected_customer}")
+
+        # 🧹 Reset input fields when switching customers
+        for key in ["gems_10", "gems_100", "inventory", "honor", "crystal"]:
+            if key in st.session_state:
+                del st.session_state[key]
+
 
 if not st.session_state.current_customer:
     st.info("Select or create a customer to begin.")
