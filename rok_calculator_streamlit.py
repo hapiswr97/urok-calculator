@@ -3,44 +3,52 @@ import json
 
 st.set_page_config(page_title="ROK Resource Tracker", page_icon="💎", layout="centered")
 
-st.title("💎 Rise of Kingdoms Resource Tracker v2")
+st.title("💎 Rise of Kingdoms Resource Tracker v2.1")
 
 # --- Initialize session state ---
 if "customers" not in st.session_state:
     st.session_state.customers = {}
 if "current_customer" not in st.session_state:
     st.session_state.current_customer = None
+if "customer_name_input" not in st.session_state:
+    st.session_state.customer_name_input = ""
 
 # --- Customer selection ---
 st.subheader("👥 Customer Session")
 
-# initialize input state
-if "customer_name_input" not in st.session_state:
-    st.session_state.customer_name_input = ""
-
-col1, col2 = st.columns([2, 1])
+col1, col2, col3 = st.columns([2, 1, 1])
 with col1:
     st.session_state.customer_name_input = st.text_input(
         "Customer name",
         value=st.session_state.customer_name_input,
-        placeholder="Enter customer name (e.g. Adit)"
+        placeholder="Enter new or existing customer name"
     )
 
 with col2:
-    if st.button("➕ Add / Switch"):
+    if st.button("➕ Add Customer"):
         name = st.session_state.customer_name_input.strip()
         if not name:
             st.warning("Please enter a valid customer name.")
         else:
-            if name not in st.session_state.customers:
+            if name in st.session_state.customers:
+                st.info(f"Customer '{name}' already exists.")
+            else:
                 st.session_state.customers[name] = {
                     "saved_states": {},
                     "before_selected": None,
                     "after_selected": None,
                 }
-            st.session_state.current_customer = name
-            st.success(f"✅ Active customer: {name}")
+                st.success(f"✅ Added new customer: {name}")
 
+with col3:
+    all_customers = list(st.session_state.customers.keys())
+    selected_customer = st.selectbox("Select existing", options=all_customers)
+    if st.button("🔁 Switch Customer"):
+        if not selected_customer:
+            st.warning("No customer selected.")
+        else:
+            st.session_state.current_customer = selected_customer
+            st.success(f"✅ Active customer: {selected_customer}")
 
 if not st.session_state.current_customer:
     st.info("Select or create a customer to begin.")
