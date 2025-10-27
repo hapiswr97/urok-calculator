@@ -4,7 +4,7 @@ from datetime import datetime
 
 st.set_page_config(page_title="ROK Resource Tracker", page_icon="💎", layout="centered")
 
-st.title("💎 Rise of Kingdoms Resource Tracker v2.4")
+st.title("💎 Rise of Kingdoms Resource Tracker v1.1")
 
 # --- Initialize session state ---
 if "customers" not in st.session_state:
